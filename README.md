@@ -11,11 +11,11 @@ playsound
 
 _____________________________________________________________________________________
 launch into mediapipe virtual environment
-cd ~/camera_ws
+cd ~/<package workspace>
 colcon build 
 source install/setup.bash
 ros2 launch camera_driver cameralaunch.py
-ros2 run move_sami
+ros2 run move_sami move
 
 _____________________________________________________________________________________
 _____________________________________________________________________________________
