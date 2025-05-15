@@ -37,7 +37,7 @@ class JamieControl:
 
     def initialize_serial_connection(self):
         try:
-            self.ser = serial.Serial(self.arduino_port, self.baud_rate, timeout=1)
+            self.ser = serial.Serial(self.arduino_port, self.baud_rate, timeout=5)
             time.sleep(2)
             print("Serial connection established.")
             packet = [0x3C, 0x50, 0x01, 0x45, 0x3E]

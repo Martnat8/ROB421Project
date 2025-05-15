@@ -15,7 +15,7 @@ class MoveSami(Node):
                 super().__init__('move_sami')
 
                 # find where move_sami was installed
-                pkg_share = get_package_share_directory('move_sami')
+                pkg_share = os.path.join('/home/Teft/ROB421Project_ws/src/move_sami')
                 cfg_dir   = os.path.join(pkg_share, 'config')
 
                 # point JamieControl at the installed JSONs
@@ -31,9 +31,11 @@ class MoveSami(Node):
                 self.sub = self.create_subscription(String, '/joint_angles_corrected', self.callback, 10)
 
                 # When testing we can create a new joint ID map so that we only publish to the desired joints
-                self.joint_id_map = {"RightChest": 4, "RightShoulder": 5, "RightBicep": 6, "RightElbow": 7,
-                        "LeftChest": 8,  "LeftShoulder": 9, "LeftBicep": 10,  "LeftElbow": 11}
+                # self.joint_id_map = {"RightChest": 4, "RightShoulder": 5, "RightBicep": 6, "RightElbow": 7,
+                #         "LeftChest": 8,  "LeftShoulder": 9, "LeftBicep": 10,  "LeftElbow": 11}
 
+                self.joint_id_map = {
+                        "LeftChest": 8,  "LeftShoulder": 9, "LeftBicep": 10,  "LeftElbow": 11}
                 
         def callback(self, msg: String):
 

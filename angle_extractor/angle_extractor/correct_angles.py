@@ -34,25 +34,27 @@ class JointAnglesCorrected(Node):
                         "TorsoBow": -1, "TorsoTilt": 1,
                         }
 
-                def callback(self, msg: String):
+        def callback(self, msg: String):
 
-                        angles_in = json.loads(msg.data)
-                        angles_out = {}
+                angles_in = json.loads(msg.data)
+                angles_out = {}
 
-                        for joint, angle in angles_in.items():
-                                home, minimum, maximum = self.joint_positions[joint]
-                                mult = self.dir_map.get(joint, 1)
+                for joint, angle in angles_in.items():
+                        home, minimum, maximum = self.joint_positions[joint]
 
-                                # apply direction and offset from home
-                                raw = home + mult * angle
+                        # Only grabs the multiplier if we have that joint
+                        mult = self.dir_map.get(joint, 1)
 
-                                # clamp into [minimum, maximum]
-                                corrected = max(minimum, min(raw, maximum))
-                                angles_out[joint] = corrected
-                                
-                        out_msg = String()
-                        out_msg.data = json.dumps(angles_out)
-                        self.pub.publish(out_msg)
+                        # apply direction and offset from home
+                        raw = home + mult * angle
+
+                        # clamp into [minimum, maximum]
+                        corrected = max(minimum, min(raw, maximum))
+                        angles_out[joint] = corrected
+                        
+                out_msg = String()
+                out_msg.data = json.dumps(angles_out)
+                self.pub.publish(out_msg)
 
 
 # This is a entry point.	

@@ -32,7 +32,7 @@ class AnglePublisher(Node):
 		self.sub = self.create_subscription(PoseLandmarks, '/pose/landmarks', self.callback, 10)
 
 		# Create the publisher (CHECK THIS OUTPUT)
-		self.pub = self.create_publisher(String, 'joint_angles', 10)
+		self.pub = self.create_publisher(String, '/joint_angles', 10)
 
 
 	# This callback will be called whenever we receive a new message on the topic.
