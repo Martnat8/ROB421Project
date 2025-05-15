@@ -8,6 +8,9 @@ Youll need to install:
 Mediapipe
 playsound
 
+You may need to run this command: (don't think this is needed rn)
+
+chmod 777 /dev/ttyUSB0
 
 _____________________________________________________________________________________
 launch into mediapipe virtual environment
