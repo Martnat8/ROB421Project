@@ -20,6 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'angle_listener = move_sami.move_sami:main'
+            
         ],
     },
 )
