@@ -14,6 +14,8 @@ class MoveSami(Node):
 
 
                 self.robot = JamieControl()
+
+                # Make sure to adjust the port in 'read_json.py' !!
                 self.robot.initialize_serial_connection()
 
                 self.sub = self.create_subscription(String, '/joint_angles_corrected', self.callback, 10)
@@ -42,25 +44,26 @@ class MoveSami(Node):
                         return
 
                 self.robot.send_joint_command(joint_ids, joint_angles, joint_time)
-                        
+        
+        def destroy_node(self):
+                # first clean up your Arduino link
+                self.robot.close_connection()
+                # then do ROS2’s normal teardown
+                super().destroy_node()
 
 
 # This is a entry point.	
 def main(args=None):
-	# Initialize rclpy.  We should do this every time.
-	rclpy.init(args=args)
+    rclpy.init(args=args)
+    motion = MoveSami()
 
-	# Make a node class.  The idiom in ROS2 is to encapsulte everything in a class
-	# that derives from Node.
-	motion = MoveSami()
+    try:
 
-	# The spin() call gives control over to ROS2, and it now takes a Node-derived
-	# class as a parameter.
-	rclpy.spin(motion)
+        rclpy.spin(motion)
+    finally:
 
-	# Make sure we shutdown everything cleanly.  This should happen, even if we don't
-	# include this line, but you should do it anyway.
-	rclpy.shutdown()
+        motion.destroy_node()
+        rclpy.shutdown()
 
 
 # If we run the node as a script, then we're going to start here.
