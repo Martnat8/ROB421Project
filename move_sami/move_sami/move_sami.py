@@ -1,19 +1,29 @@
 #!/usr/bin/env python3
 
 # Motion control for SAMI while listening to the /joint_angles_corrected for angle commands
+import os
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 import json 
 
+from ament_index_python.packages import get_package_share_directory
 from move_sami.read_json import JamieControl
 
 class MoveSami(Node):
         def __init__(self):
                 super().__init__('move_sami')
 
+                # find where move_sami was installed
+                pkg_share = get_package_share_directory('move_sami')
+                cfg_dir   = os.path.join(pkg_share, 'config')
 
-                self.robot = JamieControl()
+                # point JamieControl at the installed JSONs
+                joint_cfg = os.path.join(cfg_dir, 'Joint_config.json')
+                emote_cfg = os.path.join(cfg_dir, 'Emote.json')
+                self.robot = JamieControl(
+                joint_config_file=joint_cfg,
+                emote_file=emote_cfg,)
 
                 # Make sure to adjust the port in 'read_json.py' !!
                 self.robot.initialize_serial_connection()

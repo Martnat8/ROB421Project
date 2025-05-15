@@ -1,16 +1,21 @@
-# ROB 499 Robot Software Frameworks HW4
+# ROB 421 SAMI Robot Motion Control Using MediPipe
 
-This package contains three packages that run a camera, run mediapipe and support
-mediapipe with custom messages and services.
+This package contains a variety of packages that ammount to, hopefully, moving SAMI
+based on Google's Mediapipe.
 
-shitty readme
+Youll need to install:
+
+Mediapipe
+playsound
+
+
 _____________________________________________________________________________________
 launch into mediapipe virtual environment
 cd ~/camera_ws
 colcon build 
 source install/setup.bash
 ros2 launch camera_driver cameralaunch.py
-ros2 run rviz2 rviz2
+ros2 run move_sami
 
 _____________________________________________________________________________________
 _____________________________________________________________________________________
