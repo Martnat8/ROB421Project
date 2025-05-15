@@ -46,7 +46,7 @@ class CameraDriver(Node):
 
 
 		# Create a publisher, and assign it to a member variable. 
-		self.pub = self.create_publisher(Image, 'raw_image_out', 10)
+		self.pub = self.create_publisher(Image, '/raw_image_out', 10)
 
 		# Get FPS parameter to controll timer
 		timer_period = 1 / fps

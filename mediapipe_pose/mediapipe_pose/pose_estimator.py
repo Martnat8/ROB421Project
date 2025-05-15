@@ -39,18 +39,23 @@ class MediaPipePoseNode(Node):
 			# Initialize the parent class.
 			super().__init__('mediapipe_pose')
 
-			# 1) Pose model parameters
+			# Pose model parameters
 			self.declare_parameter('model_complexity', 1)                 # 0=lite, 1=full, 2=heavy
 			self.declare_parameter('min_detection_confidence', 0.5)      # ≥ this to accept a new detection
 			self.declare_parameter('min_tracking_confidence', 0.5)       # ≥ this to continue tracking
 
-			# 2) Enable/disable flag (can also be set via your EnablePose.srv)
+			# Enable/disable flag (can also be set via your EnablePose.srv)
 			self.declare_parameter('enable_pose', True)
 
-			# 3) Topic names (so you can remap without code changes)
+			# Topic names (so you can remap without code changes)
 			self.declare_parameter('input_image_topic', '/raw_image_out')
 			self.declare_parameter('pose_topic', '/pose/landmarks')
+
+			# We're not publishing this single landmark
 			self.declare_parameter('single_landmark_topic', '/pose/landmark')
+
+			# Rate at which we want to publish in seconds
+			self.declare_parameter('publish_rate_hz', 1.0)
 
 			# Read them back into members
 			complexity = self.get_parameter('model_complexity').value
@@ -62,7 +67,7 @@ class MediaPipePoseNode(Node):
 			out_topic  = self.get_parameter('pose_topic').value
 			single_tm  = self.get_parameter('single_landmark_topic').value
 
-
+			desired_hz = self.get_parameter('publish_rate_hz').value
 
 			# Now use those when creating your subscribers/publishers/services
 			self.pose_sub = self.create_subscription(Image, in_topic, self.image_callback, 10)
@@ -88,6 +93,10 @@ class MediaPipePoseNode(Node):
 
 			self.bridge = CvBridge()
 
+			self.last_pub_time = self.get_clock().now()
+			self.publish_period = 1.0 / desired_hz
+
+
 	
 
 
@@ -97,6 +106,15 @@ class MediaPipePoseNode(Node):
 	def image_callback(self, msg: Image):
 		if not self.pose_enabled:
 			return
+
+		# This throttles publication to a specific rate
+		now = self.get_clock().now()
+		elapsed = (now - self.last_pub_time).nanoseconds * 1e-9
+		if elapsed < self.publish_period:
+			return
+		
+		self.last_pub_time = now
+
 
 		# Convert ROS→OpenCV
 		try:
