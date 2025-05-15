@@ -68,6 +68,9 @@ class AnglePublisher(Node):
 		angles['LeftChest']  = self.compute_rotation(lm[12], lm[11], lm[23], lm[13])
 		angles['RightChest'] = self.compute_rotation(lm[11], lm[12], lm[24], lm[14])
 
+        # Convert all angles to integers
+		angles = {joint: int(angle) for joint, angle in angles.items()}
+
 		# Publish angles
 		out_msg = String()
 		out_msg.data = json.dumps(angles)

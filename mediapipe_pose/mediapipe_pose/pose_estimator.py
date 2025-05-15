@@ -107,15 +107,6 @@ class MediaPipePoseNode(Node):
 		if not self.pose_enabled:
 			return
 
-		# This throttles publication to a specific rate
-		now = self.get_clock().now()
-		elapsed = (now - self.last_pub_time).nanoseconds * 1e-9
-		if elapsed < self.publish_period:
-			return
-		
-		self.last_pub_time = now
-
-
 		# Convert ROS→OpenCV
 		try:
 			cv_bgr = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
@@ -128,15 +119,6 @@ class MediaPipePoseNode(Node):
 		results = self.pose.process(cv_rgb)
 		if not results.pose_landmarks:
 			return
-
-		# 1) Publish the landmark message as before
-		pose_msg = PoseLandmarks()
-		pose_msg.header = msg.header
-		for lm in results.pose_landmarks.landmark:
-			pose_msg.landmarks.append(
-				Landmark(x=lm.x, y=lm.y, z=lm.z, visibility=lm.visibility)
-			)
-		self.pose_pub.publish(pose_msg)
 
 		# 2) Draw landmarks on the OpenCV image
 		annotated = cv_bgr.copy()
@@ -157,6 +139,23 @@ class MediaPipePoseNode(Node):
 			self.debug_pub.publish(debug_msg)
 		except CvBridgeError as e:
 			self.get_logger().error(f'Bridge error: {e}')
+
+		# This throttles publication to a specific rate
+		now = self.get_clock().now()
+		elapsed = (now - self.last_pub_time).nanoseconds * 1e-9
+		if elapsed < self.publish_period:
+			return
+		
+		self.last_pub_time = now
+
+		# Publish the landmark message 
+		pose_msg = PoseLandmarks()
+		pose_msg.header = msg.header
+		for lm in results.pose_landmarks.landmark:
+			pose_msg.landmarks.append(
+				Landmark(x=lm.x, y=lm.y, z=lm.z, visibility=lm.visibility)
+			)
+		self.pose_pub.publish(pose_msg)
 
 
 	def service_callback(self, request, response):
