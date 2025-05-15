@@ -1,0 +1,9 @@
+# EnablePose.srv
+
+# Request: should we enable pose detection?
+bool enable
+---
+# Response: did it succeed, plus an informational message?
+bool success
+string message
+

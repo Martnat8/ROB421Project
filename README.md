@@ -1,0 +1,22 @@
+# ROB 499 Robot Software Frameworks HW4
+
+This package contains three packages that run a camera, run mediapipe and support
+mediapipe with custom messages and services.
+
+shitty readme
+_____________________________________________________________________________________
+launch into mediapipe virtual environment
+cd ~/camera_ws
+colcon build 
+source install/setup.bash
+ros2 launch camera_driver cameralaunch.py
+ros2 run rviz2 rviz2
+
+_____________________________________________________________________________________
+_____________________________________________________________________________________
+Maintainer - Nathan Martin - martnat8@oregonstate.edu
+_____________________________________________________________________________________
+License - BSD 3-Clause
+_____________________________________________________________________________________
+
+
