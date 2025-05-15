@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>move_sami</name>
+  <version>0.0.1</version>
+  <description>ROS2 node for driving SAMI joints via serial commands</description>
+  <maintainer email="martnat8@oregonstate.edu">Teft</maintainer>
+  <license>BSD-3-Clause</license>
+
+  <!-- Use ament_python to drive setup.py -->
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <!-- ROS2 client & message dependencies -->
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+
+  <!-- test dependencies -->
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
