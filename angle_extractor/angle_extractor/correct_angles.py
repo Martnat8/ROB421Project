@@ -23,6 +23,8 @@ class JointAnglesCorrected(Node):
                         "LeftChest": [115, 30, 180], "LeftShoulder": [180, 30, 195], "LeftBicep": [115, 20, 180],"LeftElbow": [105, 60, 180] 
                         }
                 
+
+                # This correlates with the CCW and CW values on the SAMI table
                 self.dir_map = {
                         # Left side
                         "LeftChest": 1, "LeftShoulder": -1, "LeftBicep": 1, "LeftElbow": 1, "LeftGripper": 1, "LeftHip": 1, "LeftKnee": 1, "LeftAnkle": 1,
@@ -34,8 +36,34 @@ class JointAnglesCorrected(Node):
                         "TorsoBow": -1, "TorsoTilt": 1,
                         }
 
+                self.home_angles = { 
+                        "RightChest": 0, "RightShoulder": 0, "RightBicep": 45, "RightElbow": 45,
+                        "LeftChest": 0, "LeftShoulder": 0, "LeftBicep": 45,"LeftElbow": 45 
+                        }
+
         def callback(self, msg: String):
 
+                # Some defence against bad messages ( I let chatGPT convice me of this utility it's worth looking over again)
+                # The thought is that if the message isn't in the correct format or there's an error these catch that and
+                # prevent the node from crashing outright
+                try:
+                        angles_in = json.loads(msg.data)
+                        if not isinstance(angles_in, dict):
+                                raise ValueError("Expected a dict of joint angles")
+                        
+                except (json.JSONDecodeError, ValueError) as e:
+                        self.get_logger().error(f"Bad joint_angles message: {e}")
+                        return
+
+                for joint, angle in angles_in.items():
+                        if joint not in self.joint_positions:
+                                self.get_logger().warn(f"Unknown joint: {joint}")
+                                continue
+                        if not isinstance(angle, (int, float)):
+                                self.get_logger().warn(f"Non-numeric angle for {joint}: {angle}")
+                                continue
+
+                # Unpack message and correct angles for republish
                 angles_in = json.loads(msg.data)
                 angles_out = {}
 
@@ -43,10 +71,13 @@ class JointAnglesCorrected(Node):
                         home, minimum, maximum = self.joint_positions[joint]
 
                         # Only grabs the multiplier if we have that joint
-                        mult = self.dir_map.get(joint, 1)
+                        direction = self.dir_map.get(joint, 1)
+
+                        # Use home position to correct angles
+                        delta = angle - self.home_angles[joint]
 
                         # apply direction and offset from home
-                        raw = home + mult * angle
+                        raw = home + direction * delta
 
                         # clamp into [minimum, maximum]
                         corrected = max(minimum, min(raw, maximum))
