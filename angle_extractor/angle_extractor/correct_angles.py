@@ -17,9 +17,9 @@ class JointAnglesCorrected(Node):
                 self.sub = self.create_subscription(String, '/joint_angles', self.callback, 10)
                 self.pub = self.create_publisher(String, '/joint_angles_corrected', 10)
 
-                # "motor_id: [home min max] This is the order of the Angles
+                # "motor_id: [servohome min max] This is the order of the Angles
                 self.joint_positions = {
-                        "RightChest": [135, 60, 180], "RightShoulder": [85, 70, 240], "RightBicep": [115, 115, 180], "RightElbow": [90, 120, 155],
+                        "RightChest": [135, 60, 180], "RightShoulder": [85, 70, 240], "RightBicep": [115, 115, 180], "RightElbow": [90, 20, 155],
                         "LeftChest": [115, 30, 180], "LeftShoulder": [180, 30, 195], "LeftBicep": [115, 20, 180],"LeftElbow": [105, 60, 180] 
                         }
                 
@@ -64,7 +64,6 @@ class JointAnglesCorrected(Node):
                                 continue
 
                 # Unpack message and correct angles for republish
-                angles_in = json.loads(msg.data)
                 angles_out = {}
 
                 for joint, angle in angles_in.items():
@@ -73,7 +72,7 @@ class JointAnglesCorrected(Node):
                         # Only grabs the multiplier if we have that joint
                         direction = self.dir_map.get(joint, 1)
 
-                        # Use home position to correct angles
+                        # Use in space home position to correct angles
                         delta = angle - self.home_angles[joint]
 
                         # apply direction and offset from home

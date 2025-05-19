@@ -55,7 +55,7 @@ class MediaPipePoseNode(Node):
 			self.declare_parameter('single_landmark_topic', '/pose/landmark')
 
 			# Rate at which we want to publish in seconds
-			self.declare_parameter('publish_rate_hz', 1.0)
+			self.declare_parameter('publish_rate_hz', 2.0)
 
 			# Read them back into members
 			complexity = self.get_parameter('model_complexity').value
@@ -67,7 +67,7 @@ class MediaPipePoseNode(Node):
 			out_topic  = self.get_parameter('pose_topic').value
 			single_tm  = self.get_parameter('single_landmark_topic').value
 
-			desired_hz = self.get_parameter('publish_rate_hz').value
+			desired_s = self.get_parameter('publish_rate_s').value
 
 			# Now use those when creating your subscribers/publishers/services
 			self.pose_sub = self.create_subscription(Image, in_topic, self.image_callback, 10)
@@ -94,7 +94,7 @@ class MediaPipePoseNode(Node):
 			self.bridge = CvBridge()
 
 			self.last_pub_time = self.get_clock().now()
-			self.publish_period = 1.0 / desired_hz
+			self.publish_period = desired_s
 
 
 	
@@ -151,10 +151,22 @@ class MediaPipePoseNode(Node):
 		# Publish the landmark message 
 		pose_msg = PoseLandmarks()
 		pose_msg.header = msg.header
-		for lm in results.pose_landmarks.landmark:
+		pose_msg.header.frame_id = 'camera_optical_frame' 
+
+		world = results.pose_world_landmarks
+		if not world:
+			return
+
+		for lm in world.landmark:
 			pose_msg.landmarks.append(
-				Landmark(x=lm.x, y=lm.y, z=lm.z, visibility=lm.visibility)
+				Landmark(
+					x=lm.x,
+					y=lm.y,
+					z=lm.z,
+					visibility=lm.visibility
+				)
 			)
+
 		self.pose_pub.publish(pose_msg)
 
 

@@ -34,8 +34,7 @@ class MoveSami(Node):
                 # self.joint_id_map = {"RightChest": 4, "RightShoulder": 5, "RightBicep": 6, "RightElbow": 7,
                 #         "LeftChest": 8,  "LeftShoulder": 9, "LeftBicep": 10,  "LeftElbow": 11}
 
-                self.joint_id_map = {
-                        "LeftChest": 8,  "LeftShoulder": 9, "LeftBicep": 10,  "LeftElbow": 11}
+                self.joint_id_map = {"LeftElbow": 11}
                 
         def callback(self, msg: String):
 
@@ -55,6 +54,7 @@ class MoveSami(Node):
                         self.get_logger().warn("No known joints in incoming message – skipping")
                         return
 
+                self.get_logger().info(f"Publishing {joint_ids}, {joint_angles}" )
                 self.robot.send_joint_command(joint_ids, joint_angles, joint_time)
         
         def destroy_node(self):
