@@ -49,12 +49,24 @@ class AnglePublisher(Node):
 		angles['LeftElbow']  = self.compute_angle(lm[11], lm[13], lm[15])
 		angles['RightElbow'] = self.compute_angle(lm[12], lm[14], lm[16])
 
+		# Calculate elbow rotation using plane normals (twist about upper arm axis)
+		# Left side: shoulder=11, elbow=13, wrist=15
+		# Using: A=wrist(15), B=elbow(13), C=shoulder(11), D=hip(23)
+		# angles['LeftElbow'] = self.compute_rotation(lm[15], lm[13], lm[11], lm[23])
+
+		# # Right side: shoulder=12, elbow=14, wrist=16
+		# # Using: A=wrist(16), B=elbow(14), C=shoulder(12), D=hip(24)
+		# angles['RightElbow'] = self.compute_rotation(lm[16], lm[14], lm[12], lm[24])
+
+
+
 		# Calculate shoulder angles
 		# Left side: shoulder=11, elbow=13, hip=23
 		# Right side: shoulder=12, elbow=14, hip=24
-		# This is the angle made by the armpit find out what that is actually called !!!!!!!
 		angles['LeftShoulder']  = self.compute_angle(lm[13], lm[11], lm[23])
 		angles['RightShoulder'] = self.compute_angle(lm[14], lm[12], lm[24])
+
+
 
 		# Calculate bicep rotation angle
 		# Left side: hip=23, shoulder=11, elbow=13, wrist=15

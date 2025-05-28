@@ -34,8 +34,12 @@ class MoveSami(Node):
                 # self.joint_id_map = {"RightChest": 4, "RightShoulder": 5, "RightBicep": 6, "RightElbow": 7,
                 #         "LeftChest": 8,  "LeftShoulder": 9, "LeftBicep": 10,  "LeftElbow": 11}
 
-                self.joint_id_map = {"RightElbow": 11}
+                # self.joint_id_map = {"RightElbow": 7,"RightBicep": 6, "RightShoulder": 5,"RightChest": 4,\
+                #                       "LeftElbow": 11, "LeftBicep": 10, "LeftShoulder": 9, "LeftChest": 8}
                 
+                self.joint_id_map = {"RightShoulder": 5,"RightChest": 4,\
+                                      "LeftShoulder": 9, "LeftChest": 8}
+
         def callback(self, msg: String):
 
                 angles_in = json.loads(msg.data)
@@ -47,7 +51,7 @@ class MoveSami(Node):
                         if name in self.joint_id_map}
                 
                 joint_ids    = list(id_angles.keys())       # [4, 5, 6, …]
-                joint_angles = list(id_angles.values())     # [37.2, 82.5, …]
+                joint_angles = list(id_angles.values())     # [37, 82, …]
                 joint_time   = 1      
 
                 if not id_angles:
