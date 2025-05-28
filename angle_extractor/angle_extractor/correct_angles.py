@@ -36,9 +36,10 @@ class JointAnglesCorrected(Node):
                         "TorsoBow": -1, "TorsoTilt": 1,
                         }
 
+                # The home angles in real space frame
                 self.home_angles = { 
-                        "RightChest": 0, "RightShoulder": 0, "RightBicep": 45, "RightElbow": 45,
-                        "LeftChest": 0, "LeftShoulder": 0, "LeftBicep": 45,"LeftElbow": 45 
+                        "RightChest": 0, "RightShoulder": 0, "RightBicep":90, "RightElbow": 90,
+                        "LeftChest": 0, "LeftShoulder": 0, "LeftBicep": 90,"LeftElbow": 90 
                         }
 
         def callback(self, msg: String):
@@ -67,20 +68,22 @@ class JointAnglesCorrected(Node):
                 angles_out = {}
 
                 for joint, angle in angles_in.items():
-                        home, minimum, maximum = self.joint_positions[joint]
+                        servohome, minimum, maximum = self.joint_positions[joint]
+
 
                         # Only grabs the multiplier if we have that joint
                         direction = self.dir_map.get(joint, 1)
 
-                        # Use in space home position to correct angles
-                        delta = angle - self.home_angles[joint]
+                        # direction maps world → servo
+                        delta = direction * (angle - self.home_angles[joint])
+                        raw = servohome + delta
 
-                        # apply direction and offset from home
-                        raw = home + direction * delta
 
                         # clamp into [minimum, maximum]
                         corrected = max(minimum, min(raw, maximum))
-                        angles_out[joint] = corrected
+                        angles_out[joint] = raw
+                        print(f"{joint}: input={angle}, servohome={servohome}, worldhome={self.home_angles[joint]}, delta={delta}, raw={raw}, corrected={corrected}")
+
                         
                 out_msg = String()
                 out_msg.data = json.dumps(angles_out)

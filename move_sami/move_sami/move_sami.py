@@ -34,7 +34,7 @@ class MoveSami(Node):
                 # self.joint_id_map = {"RightChest": 4, "RightShoulder": 5, "RightBicep": 6, "RightElbow": 7,
                 #         "LeftChest": 8,  "LeftShoulder": 9, "LeftBicep": 10,  "LeftElbow": 11}
 
-                self.joint_id_map = {"LeftElbow": 11}
+                self.joint_id_map = {"RightElbow": 11}
                 
         def callback(self, msg: String):
 

@@ -67,7 +67,7 @@ class MediaPipePoseNode(Node):
 			out_topic  = self.get_parameter('pose_topic').value
 			single_tm  = self.get_parameter('single_landmark_topic').value
 
-			desired_s = self.get_parameter('publish_rate_s').value
+			desired_s = self.get_parameter('publish_rate_hz').value
 
 			# Now use those when creating your subscribers/publishers/services
 			self.pose_sub = self.create_subscription(Image, in_topic, self.image_callback, 10)
