@@ -122,7 +122,7 @@ class AnglePublisher(Node):
 		# Build shared axis vector
 		vBC = p_C - p_B
 
-		# Two move vectors to define planes
+		# Two more vectors to define planes
 		vBA = p_A - p_B
 		vCD = p_D - p_C
 
@@ -151,6 +151,25 @@ class AnglePublisher(Node):
 		sign = np.sign(np.dot(vBC / np.linalg.norm(vBC), cross_n1_n2))
 		# multiply magnitude by sign
 		return sign * phi
+
+
+	# Calculate the angle between a vector and the normal of a plane 
+	def vector_plane(self, A, B, C, D, E):
+
+		# Extract 3D points from landmarks
+		p_A = np.array([A.x, A.y, A.z])
+		p_B = np.array([B.x, B.y, B.z])
+		p_C = np.array([C.x, C.y, C.z])
+		p_D = np.array([D.x, D.y, D.z])
+		p_E = np.array([E.x, E.y, E.z])
+
+		# Build the vector
+		v_AB = p_A - p_B
+
+		# Find the normal of the plane
+		v_BC = p_B - p_C
+		v_CD = p_C - p_D
+		V_DE
 
 
 
