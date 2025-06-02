@@ -63,13 +63,13 @@ class AnglePublisher(Node):
 		# Calculate shoulder angles
 		# Left side: shoulder=11, elbow=13, hip=23
 		# Right side: shoulder=12, elbow=14, hip=24
-		# angles['LeftShoulder']  = self.compute_angle(lm[13], lm[11], lm[23])
-		# angles['RightShoulder'] = self.compute_angle(lm[14], lm[12], lm[24])
+		angles['LeftShoulder']  = self.compute_angle(lm[13], lm[11], lm[23])
+		angles['RightShoulder'] = self.compute_angle(lm[14], lm[12], lm[24])
 
-		# Left shoulder: vector = hip(23)→shoulder(11), plane = wrist(15), elbow(13), shoulder(11)
-		angles['LeftShoulder'] = self.vector_plane(lm[23], lm[11], lm[15], lm[13], lm[11])
-		# Right shoulder: vector = hip(24)→shoulder(12), plane = wrist(16), elbow(14), shoulder(12)
-		angles['RightShoulder'] = self.vector_plane(lm[24], lm[12], lm[16], lm[14], lm[12])
+		# # Left shoulder: vector = hip(23)→shoulder(11), plane = wrist(15), elbow(13), shoulder(11)
+		# angles['LeftShoulder'] = self.vector_plane(lm[23], lm[11], lm[15], lm[13], lm[11])
+		# # Right shoulder: vector = hip(24)→shoulder(12), plane = wrist(16), elbow(14), shoulder(12)
+		# angles['RightShoulder'] = self.vector_plane(lm[24], lm[12], lm[16], lm[14], lm[12])
 
 
 

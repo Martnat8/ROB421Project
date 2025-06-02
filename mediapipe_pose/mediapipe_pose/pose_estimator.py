@@ -55,7 +55,7 @@ class MediaPipePoseNode(Node):
 			self.declare_parameter('single_landmark_topic', '/pose/landmark')
 
 			# Rate at which we want to publish in seconds
-			self.declare_parameter('publish_rate_hz', 2.0)
+			self.declare_parameter('publish_rate_hz', 1.0)
 
 			# Read them back into members
 			complexity = self.get_parameter('model_complexity').value

@@ -19,8 +19,8 @@ class JointAnglesCorrected(Node):
 
                 # "motor_id: [servohome min max] This is the order of the Angles
                 self.joint_positions = {
-                        "RightChest": [135, 60, 180], "RightShoulder": [85, 70, 240], "RightBicep": [115, 115, 180], "RightElbow": [90, 20, 155],
-                        "LeftChest": [115, 30, 180], "LeftShoulder": [180, 30, 195], "LeftBicep": [115, 20, 180],"LeftElbow": [105, 60, 180] 
+                        "RightChest": [135, 80, 150], "RightShoulder": [85, 70, 240], "RightBicep": [115, 115, 180], "RightElbow": [90, 20, 155],
+                        "LeftChest": [115, 60, 140], "LeftShoulder": [180, 30, 195], "LeftBicep": [115, 20, 180],"LeftElbow": [105, 60, 180] 
                         }
                 
                 # self.joint_positions = {
@@ -32,9 +32,9 @@ class JointAnglesCorrected(Node):
                 # This correlates with the CCW and CW values on the SAMI table
                 self.dir_map = {
                         # Left side
-                        "LeftChest": 1, "LeftShoulder": 1, "LeftBicep": 1, "LeftElbow": 1, "LeftGripper": 1, "LeftHip": 1, "LeftKnee": 1, "LeftAnkle": 1,
+                        "LeftChest": 1, "LeftShoulder": -1, "LeftBicep": 1, "LeftElbow": 1, "LeftGripper": 1, "LeftHip": 1, "LeftKnee": 1, "LeftAnkle": 1,
                         # Right side
-                        "RightChest": -1, "RightShoulder": 1, "RightBicep": 1, "RightElbow": -1, "RightGripper": 1, "RightHip": 1, "RightKnee": 1, "RightAnkle": 1,
+                        "RightChest": 1, "RightShoulder": 1, "RightBicep": 1, "RightElbow": -1, "RightGripper": 1, "RightHip": 1, "RightKnee": 1, "RightAnkle": 1,
                         # Head
                         "HeadNod": 1, "HeadTurn": 1, "HeadTilt": 1,
                         # Torso

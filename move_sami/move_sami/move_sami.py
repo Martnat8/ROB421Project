@@ -37,8 +37,11 @@ class MoveSami(Node):
                 # self.joint_id_map = {"RightElbow": 7,"RightBicep": 6, "RightShoulder": 5,"RightChest": 4,\
                 #                       "LeftElbow": 11, "LeftBicep": 10, "LeftShoulder": 9, "LeftChest": 8}
                 
-                self.joint_id_map = {"RightShoulder": 5,"RightChest": 4,\
-                                      "LeftShoulder": 9, "LeftChest": 8}
+                self.joint_id_map = {"RightElbow": 7,"RightBicep": 6, "RightShoulder": 5, "RightChest": 4,\
+                                      "LeftElbow": 11, "LeftBicep": 10, "LeftShoulder": 9, "LeftChest": 8}
+
+                self.robot.send_joint_command([18], [115], 1)                
+                self.robot.send_joint_command([19], [125], 1)  
 
         def callback(self, msg: String):
 
@@ -57,6 +60,8 @@ class MoveSami(Node):
                 if not id_angles:
                         self.get_logger().warn("No known joints in incoming message – skipping")
                         return
+
+
 
                 self.get_logger().info(f"Publishing {joint_ids}, {joint_angles}" )
                 self.robot.send_joint_command(joint_ids, joint_angles, joint_time)
