@@ -63,8 +63,13 @@ class AnglePublisher(Node):
 		# Calculate shoulder angles
 		# Left side: shoulder=11, elbow=13, hip=23
 		# Right side: shoulder=12, elbow=14, hip=24
-		angles['LeftShoulder']  = self.compute_angle(lm[13], lm[11], lm[23])
-		angles['RightShoulder'] = self.compute_angle(lm[14], lm[12], lm[24])
+		# angles['LeftShoulder']  = self.compute_angle(lm[13], lm[11], lm[23])
+		# angles['RightShoulder'] = self.compute_angle(lm[14], lm[12], lm[24])
+
+		# Left shoulder: vector = hip(23)→shoulder(11), plane = wrist(15), elbow(13), shoulder(11)
+		angles['LeftShoulder'] = self.vector_plane(lm[23], lm[11], lm[15], lm[13], lm[11])
+		# Right shoulder: vector = hip(24)→shoulder(12), plane = wrist(16), elbow(14), shoulder(12)
+		angles['RightShoulder'] = self.vector_plane(lm[24], lm[12], lm[16], lm[14], lm[12])
 
 
 
@@ -153,7 +158,7 @@ class AnglePublisher(Node):
 		return sign * phi
 
 
-	# Calculate the angle between a vector and the normal of a plane 
+	# Calculate the angle between a vector (AB) and the normal of a plane (defined by points C, D, E)
 	def vector_plane(self, A, B, C, D, E):
 
 		# Extract 3D points from landmarks
@@ -163,13 +168,30 @@ class AnglePublisher(Node):
 		p_D = np.array([D.x, D.y, D.z])
 		p_E = np.array([E.x, E.y, E.z])
 
-		# Build the vector
+		# Vector AB (e.g., direction vector)
 		v_AB = p_A - p_B
 
-		# Find the normal of the plane
-		v_BC = p_B - p_C
-		v_CD = p_C - p_D
-		V_DE
+		# Two vectors in the plane
+		v_CD = p_D - p_C
+		v_CE = p_E - p_C
+
+		# Plane normal from cross product
+		n_plane = np.cross(v_CD, v_CE)
+		n_plane_norm = np.linalg.norm(n_plane)
+
+		if n_plane_norm == 0:
+			return 0.0
+
+		n_plane /= n_plane_norm
+
+		# Compute angle between vector and plane normal
+		cos_theta = np.dot(v_AB, n_plane) / np.linalg.norm(v_AB)
+		cos_theta = max(-1.0, min(1.0, cos_theta))
+
+		# 90 - angle gives angle between vector and plane (rather than vector and normal)
+		theta = math.degrees(math.acos(cos_theta))
+		return 90.0 - theta
+
 
 
 
